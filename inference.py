@@ -183,9 +183,21 @@ class InferenceModule:
         Return the probability P(noisyDistance | pacmanPosition, ghostPosition).
         """
         "*** YOUR CODE HERE ***"
-        if (noisyDistance is None) or (ghostPosition == jailPosition):
-            if (noisyDistance is None) and (ghostPosition == jailPosition):
-                return 1
+        '''
+            P(noisyDistance | pacmanPosition, ghostPosition) = P(noisyDistance | noisyDistance, manhattan(pacmanPosition, ghostPosition))
+        special cases:
+            P(noisyDistance=None | pacmanPosition=any, ghostPosition=jailPosition) = 1
+            P(noisyDistance!=None | pacmanPosition=any, ghostPosition=jailPosition) = 0
+            P(noisyDistance=None | pacmanPosition=any, ghostPosition!=jailPosition) = 0
+        '''
+        
+        if (noisyDistance is None) and (ghostPosition == jailPosition):
+            return 1
+
+        if (noisyDistance is not None) and (ghostPosition == jailPosition):
+            return 0
+
+        if (noisyDistance is None) and (ghostPosition != jailPosition):
             return 0
 
         trueDistance = manhattanDistance(pacmanPosition, ghostPosition)
