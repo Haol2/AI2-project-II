@@ -311,6 +311,9 @@ class ExactInference(InferenceModule):
         position is known.
         """
         "*** YOUR CODE HERE ***"
+        '''
+        P(ghost | noisyDistance) = product(P(noisyDistance | pacmanPosition, ghostPosition))
+        '''
         pacmanPosition = gameState.getPacmanPosition()
         jailPosition = self.getJailPosition()
 
