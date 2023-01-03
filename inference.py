@@ -312,7 +312,8 @@ class ExactInference(InferenceModule):
         """
         "*** YOUR CODE HERE ***"
         '''
-        P(ghost | noisyDistance) = product(P(noisyDistance | pacmanPosition, ghostPosition))
+        equation:
+            P(ghost | noisyDistance) = product(P(noisyDistance | pacmanPosition, ghostPosition))
         '''
         pacmanPosition = gameState.getPacmanPosition()
         jailPosition = self.getJailPosition()
@@ -332,7 +333,28 @@ class ExactInference(InferenceModule):
         current position is known.
         """
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        '''
+        equation:
+            P(ghostPosition_t+1 = position) = sum( getPositionDistribution(oldPosition)[position] * P(ghostPosition_t = oldPosition) )
+        explanation:
+            for test cases in which the GoSouthGhost agent is used, the squares at the bottom are getting slightly brighter than the ones on the top, since the ghost tends
+            to move towards south - and Pacman knows this from the position distribution of the ghost agent.
+        '''
+        newPosDists = {}
+        newBeliefs = DiscreteDistribution() #beliefs at t+1
+
+        for oldPos in self.allPositions:
+            newPostDist = self.getPositionDistribution(gameState, oldPos)
+            newPosDists[oldPos] = newPostDist
+
+        for pos in self.allPositions:
+            newBelief = 0
+            for oldPos in self.allPositions:
+                newBelief += newPosDists[oldPos][pos] * self.beliefs[oldPos]
+            newBeliefs[pos] = newBelief
+        
+        self.beliefs = newBeliefs
+        self.beliefs.normalize()
 
     def getBeliefDistribution(self):
         return self.beliefs
