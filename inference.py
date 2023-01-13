@@ -435,8 +435,8 @@ class ParticleFilter(InferenceModule):
         beliefDistribution = self.getBeliefDistribution()
 
         for oldPos in unique_particles:
-            newPostDist = self.getPositionDistribution(gameState, oldPos)
-            newPosDists[oldPos] = newPostDist
+            newPosDist = self.getPositionDistribution(gameState, oldPos)
+            newPosDists[oldPos] = newPosDist
 
         self.particles = []
         for i in range(self.numParticles):
@@ -569,7 +569,15 @@ class JointParticleFilter(ParticleFilter):
 
             # now loop through and update each entry in newParticle...
             "*** YOUR CODE HERE ***"
-            raiseNotDefined()
+            ''' 
+            questions:
+                - pacman knows that both ghosts will move away from each other, so after elapsing time enough, pacmans beliefs without observations 
+                  converge into that both ghosts on the sides of the gameboard. With observations, pacman can also determine which of the ghosts is
+                  on which side, which is not possible with only elapseTime() since pacman doesn't move.
+            '''
+            for i in range(self.numGhosts):
+                newPosDist = self.getPositionDistribution(gameState, oldParticle, i, self.ghostAgents[i])
+                newParticle[i] = newPosDist.sample()
 
             """*** END YOUR CODE HERE ***"""
             newParticles.append(tuple(newParticle))
