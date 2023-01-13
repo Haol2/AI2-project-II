@@ -489,7 +489,18 @@ class JointParticleFilter(ParticleFilter):
         """
         self.particles = []
         "*** YOUR CODE HERE ***"
-        raiseNotDefined()
+        posititions_cartesian = list(itertools.product(self.legalPositions, repeat=self.numGhosts))
+        random.shuffle(posititions_cartesian)
+
+        remainder = self.numParticles % len(posititions_cartesian)
+        div = int(self.numParticles / len(posititions_cartesian))
+
+        for tuple in posititions_cartesian:
+            self.particles.extend([tuple] * div)
+
+            if remainder > 0:
+                self.particles.append(tuple)
+                remainder -= 1
 
     def addGhostAgent(self, agent):
         """
